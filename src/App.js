@@ -1,5 +1,5 @@
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import './App.css';
 
@@ -7,6 +7,7 @@ function App() {
   const apiKey = "f56f24967aaf51182d1d4df628297c6d";
   const [inputCity, setInputCity] = useState("");
   const [data, setData] = useState({});
+  const [error, setError] = useState(""); 
 
   const getWeatherDetails = (cityName) => {
     if (!cityName) return;
@@ -15,9 +16,12 @@ function App() {
       .then((res) => {
         console.log("response", res.data);
         setData(res.data);
+        setError(""); 
       })
       .catch((err) => {
         console.log("err", err);
+        setError("Error: No data found"); 
+        setData({}); 
       });
   }
 
@@ -72,7 +76,15 @@ function App() {
         </div>
       </div>
 
-      {Object.keys(data).length > 0 && (
+      {error && (
+        <div className="col-md-12 text-center mt-5">
+          <div className="shadow rounded wetherResultBox">
+            <h5 className="weathorCity">{error}</h5>
+          </div>
+        </div>
+      )}
+
+      {Object.keys(data).length > 0 && !error && (
         <div className="col-md-12 text-center mt-5">
           <div className="shadow rounded wetherResultBox">
             {getWeatherIcon((data?.main?.temp) - 273.15)}
@@ -85,6 +97,9 @@ function App() {
       )}
     </div>
   );
+}
+
+export default App;
 }
 
 export default App;
